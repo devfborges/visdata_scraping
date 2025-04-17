@@ -18,7 +18,10 @@ class VisdataClient:
         return visdata_csv.json()['data']
     
     def __format_data(self, tabela: list) -> list:
-        tabela = [linha + [self.municipio] for linha in tabela if linha]
+        for i, linha in enumerate(tabela):
+            linha_tmp = list(map(lambda x: '' if x == '-' or x == 'R$ -' else x, linha))
+            linha_tmp.append(self.municipio)
+            tabela[i] = linha_tmp
         return tabela
     
     def return_data(self) -> list:

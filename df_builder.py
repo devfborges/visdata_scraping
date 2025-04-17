@@ -18,3 +18,4 @@ class DfBuilder:
     def gen_csv(self) -> None:
         df = pd.DataFrame(self.data, columns=self.t_colunas)
         df.to_csv('output_visdata.csv')
+        print("output_visdata.csv foi gerado com sucesso!")
