@@ -1,6 +1,6 @@
 import json
 from visdata_client import VisdataClient
-from df_builder import DfBuilder
+from loader_db import LoaderDB
 
 def main() -> None:
     with open("municipios.txt", "r", encoding="utf-8") as arquivo:
@@ -19,8 +19,8 @@ def main() -> None:
         vdclient = VisdataClient(cod_municipio, municipio)
         data += vdclient.return_data()
 
-    dfbuilder = DfBuilder(data)
-    dfbuilder.gen_csv()
+    loader = LoaderDB(data)
+    loader.load_data()
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,6 @@
 import requests
+from datetime import datetime
+import re
 
 class VisdataClient:
 
@@ -19,11 +21,33 @@ class VisdataClient:
     
     def __format_data(self, tabela: list) -> list:
         for i, linha in enumerate(tabela):
-            linha_tmp = list(map(lambda x: '' if x == '-' or x == 'R$ -' else x, linha))
+            linha_tmp = list(map(self.__remove_chars, linha))
             linha_tmp.append(self.municipio)
             tabela[i] = linha_tmp
         return tabela
     
+    def __remove_chars(self, value):
+        if (value == '-') or (value == 'R$ -'):
+            return None
+        elif ('R$' in value):
+            value = value.replace('R$', '')
+            value = value.replace('.', '')
+            value = value.replace(',', '.')
+            return float(value)
+        elif ('.' in value):
+            value = value.replace('.', '')
+            return int(value)
+        elif re.match(r'\d{2}/\d{4}', value):  # detecta padrão tipo "01/2005"
+            return self.__format_date(value)
+        return value.strip()
+    
+    def __format_date(self, value: str) -> str:
+        try:
+            dt = datetime.strptime(value, "%m/%Y")
+            return dt.strftime("%Y-%m-%d")
+        except:
+            return value
+
     def return_data(self) -> list:
         tabela = self.__get_data()
         return self.__format_data(tabela)
