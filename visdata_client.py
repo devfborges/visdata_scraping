@@ -30,13 +30,11 @@ class VisdataClient:
         if (value == '-') or (value == 'R$ -'):
             return None
         elif ('R$' in value):
-            value = value.replace('R$', '')
-            value = value.replace('.', '')
-            value = value.replace(',', '.')
-            return float(value)
+            value = float(value[3:].replace('.', '').replace(',', '.'))
+            return value
         elif ('.' in value):
-            value = value.replace('.', '')
-            return int(value)
+            value = int(value.replace('.', ''))
+            return value
         elif re.match(r'\d{2}/\d{4}', value):  # detecta padrão tipo "01/2005"
             return self.__format_date(value)
         return value.strip()
